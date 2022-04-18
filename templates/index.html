@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="user-scalable=no,width=device-width" />
+    <title>FileTransfer HOME</title>
+    {% include 'include/css.html' %}
+</head>
+<body id="index">
+    {% include 'include/header.html' %}
+
+    <div class="container-fluid">
+        <div>
+            <h3></h3>
+
+            <form id="uploadForm" class="upload-files" action="{{ url_for('upload_file') }}" method=post enctype=multipart/form-data>
+                <p>
+                    Select the file:
+                    <input style="width: 200px;" type=file name=file> &nbsp;&nbsp;
+
+                    <a class="btn btn-sm btn-primary" href="javascript:" onclick="upload()" >Upload</a>
+                    <span>{{ message }}</span>
+                </p>
+            </form>
+        </div>
+
+        <table class="table table-bordered table-hover data-grid" data-empty-msg="No data found!">
+            <thead>
+            <tr>
+                <th>Number</th>
+                <th>File Name</th>
+                <th>Last Modified</th>
+                <th>Size</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for item in file_list %}
+            <tr>
+                <td>{{ loop.index }}</td>
+                <td><a href="{{ url_for('index',path=item.filename) }}">{{ item.filename }}</a></td>
+                <td>{{ item.mtime }}</td>
+                <td>{{ item.size }}</td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="{{ url_for('download_file', filename=item.filename) }}" >Download</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+{% include 'include/js.html' %}
+<script type="text/javascript">
+    function upload() {
+        var file = $("input[name='file']").val();
+        if (file == '') {
+            layer.msg('Please select a file first!');
+            return;
+        }
+        layer.load(1, { shade: [0.1,'#fff'], time : 60*1000});
+        $('#uploadForm').submit();
+    }
+</script>
+</html>
